@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Claude MCP Tool Server",
+  "name_for_model": "claude_mcp",
+  "description_for_human": "Provides game development tools like asset management and world simulation.",
+  "description_for_model": "HTTP server exposing POST /tools/{tool} for running various game development utilities. Include an 'input' object in the JSON body.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "/.well-known/openapi.json"
+  },
+  "logo_url": "/assets/fog_texture.png",
+  "contact_email": "support@example.com",
+  "legal_info_url": "https://example.com/legal"
+}
