@@ -1,0 +1,52 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Claude MCP Tool Server",
+    "version": "1.0.0",
+    "description": "Server providing game development tools for Claude MCP."
+  },
+  "paths": {
+    "/tools/{tool}": {
+      "post": {
+        "summary": "Run a tool by name",
+        "parameters": [
+          {
+            "name": "tool",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": { "type": "object" }
+                },
+                "required": ["input"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool output",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "output": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
