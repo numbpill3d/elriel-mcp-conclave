@@ -9,6 +9,9 @@ import renderSceneHTML from './tools/renderSceneHTML.js'
 import npcBrain from './tools/npcBrain.js'
 import shaderCheck from './tools/shaderCheck.js'
 import convertModel from './tools/convertModel.js'
+import textureForge from './tools/textureForge.js'
+import skyboxGen from './tools/skyboxGen.js'
+import worldSim from './tools/worldSim.js'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -23,7 +26,10 @@ const tools = {
   ...renderSceneHTML,
   ...npcBrain,
   ...shaderCheck,
-  ...convertModel
+  ...convertModel,
+  ...textureForge,
+  ...skyboxGen,
+  ...worldSim
 }
 
 app.get('/tools', (req, res) => {
