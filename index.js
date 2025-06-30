@@ -32,6 +32,17 @@ const tools = {
   ...worldSim
 }
 
+// Tool Usage Logger
+app.use((req, res, next) => {
+  if (req.method === 'POST' && req.url.startsWith('/tools/')) {
+    const toolName = req.url.split('/')[2]
+    const timestamp = new Date().toISOString()
+    const log = `[${timestamp}] Tool used: ${toolName}\n`
+    fs.appendFileSync('tool_usage.log', log)
+  }
+  next()
+})
+
 app.get('/tools', (req, res) => {
   res.json({
     tools: Object.keys(tools).map((key) => ({
