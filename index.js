@@ -48,6 +48,32 @@ app.use((req, res, next) => {
   next()
 })
 
+// Version Control Middleware for Lore Editing
+const versionLog = './version_log.json'
+if (!fs.existsSync(versionLog)) fs.writeFileSync(versionLog, JSON.stringify([]))
+
+function logVersionChange(tool, input) {
+  const history = JSON.parse(fs.readFileSync(versionLog, 'utf-8'))
+  history.push({ time: new Date().toISOString(), tool, input })
+  fs.writeFileSync(versionLog, JSON.stringify(history, null, 2))
+}
+
+app.post('/tools/:tool', async (req, res) => {
+  const toolName = req.params.tool
+  const tool = tools[toolName]
+  if (!tool) return res.status(404).send({ error: 'Tool not found' })
+  try {
+    const input = req.body.input || {}
+    const result = await tool.run(input)
+    if (toolName.includes('add') || toolName.includes('update')) {
+      logVersionChange(toolName, input)
+    }
+    res.json({ output: result })
+  } catch (e) {
+    res.status(500).json({ error: e.toString() })
+  }
+})
+
 app.get('/tools', (req, res) => {
   res.json({
     tools: Object.keys(tools).map((key) => ({
@@ -55,18 +81,6 @@ app.get('/tools', (req, res) => {
       description: tools[key].description
     }))
   })
-})
-
-app.post('/tools/:tool', async (req, res) => {
-  const toolName = req.params.tool
-  const tool = tools[toolName]
-  if (!tool) return res.status(404).send({ error: 'Tool not found' })
-  try {
-    const result = await tool.run(req.body.input || {})
-    res.json({ output: result })
-  } catch (e) {
-    res.status(500).json({ error: e.toString() })
-  }
 })
 
 app.get('/', (req, res) => {
