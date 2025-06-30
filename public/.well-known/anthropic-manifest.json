@@ -12,6 +12,6 @@
     "url": "/.well-known/openapi.json"
   },
   "logo_url": "/assets/icon.png",
-  "contact_email": "nolove@incel.email",
+  "contact_email": "contact@example.com",
   "legal_info_url": "https://voidrane.nekoweb.org"
 }
