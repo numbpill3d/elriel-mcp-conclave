@@ -19,7 +19,6 @@ import sceneTemplate from './tools/sceneTemplate.js'
 import uiPanel from './tools/uiPanel.js'
 import shaderSnippet from './tools/shaderSnippet.js'
 
-
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -38,10 +37,10 @@ const tools = {
   ...skyboxGen,
   ...worldSim,
   ...loreTools,
+  ...styleGuide,
   ...sceneTemplate,
   ...uiPanel,
-  ...shaderSnippet,
-  ...styleGuide
+  ...shaderSnippet
 }
 
 // Tool Usage Logger
