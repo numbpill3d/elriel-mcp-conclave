@@ -1,24 +1,6 @@
-// index.js
 import express from 'express'
 import cors from 'cors'
 import fs from 'fs'
-
-import assetRegistry from './tools/assetRegistry.js'
-import saveStateDB from './tools/saveStateDB.js'
-import inspectGLTF from './tools/inspectGLTF.js'
-import renderSceneHTML from './tools/renderSceneHTML.js'
-import npcBrain from './tools/npcBrain.js'
-import shaderCheck from './tools/shaderCheck.js'
-import convertModel from './tools/convertModel.js'
-import textureForge from './tools/textureForge.js'
-import skyboxGen from './tools/skyboxGen.js'
-import worldSim from './tools/worldSim.js'
-import loreTools from './tools/loreTools.js'
-import styleGuide from './tools/styleGuide.js'
-import sceneTemplate from './tools/sceneTemplate.js'
-import uiPanel from './tools/uiPanel.js'
-import shaderSnippet from './tools/shaderSnippet.js'
-import resourceCatalog from './tools/resourceCatalog.js'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -27,23 +9,11 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('public'))
 
-const tools = {
-  ...assetRegistry,
-  ...saveStateDB,
-  ...inspectGLTF,
-  ...renderSceneHTML,
-  ...npcBrain,
-  ...shaderCheck,
-  ...convertModel,
-  ...textureForge,
-  ...skyboxGen,
-  ...worldSim,
-  ...loreTools,
-  ...styleGuide,
-  ...sceneTemplate,
-  ...uiPanel,
-  ...resourceCatalog,
-  ...shaderSnippet
+const tools = {}
+const toolFiles = fs.readdirSync('./tools').filter(f => f.endsWith('.js'))
+for (const file of toolFiles) {
+  const mod = await import(`./tools/${file}`)
+  Object.assign(tools, mod.default || {})
 }
 
 // Tool Usage Logger
@@ -85,10 +55,7 @@ app.post('/tools/:tool', async (req, res) => {
 
 app.get('/tools', (req, res) => {
   res.json({
-    tools: Object.keys(tools).map((key) => ({
-      name: key,
-      description: tools[key].description
-    }))
+    tools: Object.keys(tools).map(key => ({ name: key, description: tools[key].description }))
   })
 })
 

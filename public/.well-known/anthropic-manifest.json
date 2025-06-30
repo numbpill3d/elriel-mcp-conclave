@@ -9,9 +9,9 @@
   },
   "api": {
     "type": "openapi",
-    "url": "/.well-known/openapi.json"
+    "url": "http://localhost:3000/.well-known/openapi.json"
   },
   "logo_url": "/assets/icon.png",
-  "contact_email": "nolove@incel.email",
+  "contact_email": "contact@example.com",
   "legal_info_url": "https://voidrane.nekoweb.org"
 }
