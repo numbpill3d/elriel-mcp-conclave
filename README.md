@@ -34,6 +34,7 @@ List tools:
 GET /tools
 ```
 
+
 Run a tool by POSTing JSON with an `input` object:
 
 ```

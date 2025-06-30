@@ -9,7 +9,7 @@
   },
   "api": {
     "type": "openapi",
-    "url": "/.well-known/openapi.json"
+    "url": "http://localhost:3000/.well-known/openapi.json"
   },
   "logo_url": "/assets/icon.png",
   "contact_email": "contact@example.com",
