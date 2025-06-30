@@ -15,6 +15,10 @@ import skyboxGen from './tools/skyboxGen.js'
 import worldSim from './tools/worldSim.js'
 import loreTools from './tools/loreTools.js'
 import styleGuide from './tools/styleGuide.js'
+import sceneTemplate from './tools/sceneTemplate.js'
+import uiPanel from './tools/uiPanel.js'
+import shaderSnippet from './tools/shaderSnippet.js'
+
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -34,6 +38,9 @@ const tools = {
   ...skyboxGen,
   ...worldSim,
   ...loreTools,
+  ...sceneTemplate,
+  ...uiPanel,
+  ...shaderSnippet,
   ...styleGuide
 }
 
