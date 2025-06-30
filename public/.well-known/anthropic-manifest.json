@@ -11,7 +11,7 @@
     "type": "openapi",
     "url": "/.well-known/openapi.json"
   },
-  "logo_url": "/assets/fog_texture.png",
-  "contact_email": "support@example.com",
-  "legal_info_url": "https://example.com/legal"
+  "logo_url": "/assets/icon.png",
+  "contact_email": "nolove@incel.email",
+  "legal_info_url": "https://voidrane.nekoweb.org"
 }
