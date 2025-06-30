@@ -1,0 +1,14 @@
+{
+  "Xiloth": {
+    "archetype": "bitter wanderer",
+    "goals": ["escape", "reveal corruption"],
+    "inventory": ["flare", "torn letter"],
+    "memory_fragments": ["signal tower collapse", "coded dream"]
+  },
+  "Hexic": {
+    "archetype": "data priestess",
+    "goals": ["preserve relics", "decrypt prophecy"],
+    "inventory": ["healing prism", "glyph ring"],
+    "memory_fragments": ["first sunset", "a name she forgot"]
+  }
+}
