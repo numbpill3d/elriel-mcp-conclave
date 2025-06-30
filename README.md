@@ -26,17 +26,21 @@ The server defaults to port `3000`. You may set the `PORT` environment variable 
 
 ## Usage
 
-List all available tools via:
+All JavaScript modules inside the `tools/` directory are automatically loaded and exposed via HTTP.
+
+List tools:
 
 ```
 GET /tools
 ```
 
-Run a tool by sending a JSON body containing an `input` object:
+Run a tool by POSTing JSON with an `input` object:
 
 ```
 POST /tools/<tool-name>
 ```
+
+Static assets live under `public/assets/`. Additional folders such as `scenes/`, `shaders/` and `ui/` are provided for future content and kept in version control using `.gitkeep` files.
 
 See `public/.well-known/openapi.json` for the minimal API specification.
 
