@@ -1,0 +1,37 @@
+{
+  "name": "claude-mcp-server",
+  "version": "1.0.0",
+  "description": "Claude MCP tool server for asset management, save state, and build control.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "claude",
+    "mcp",
+    "elriel",
+    "ai-code",
+    "vibe-coding",
+    "gamedev",
+    "gamer",
+    "hidden-layer-media",
+    "voidrane",
+    "numbpilled",
+    "splicer",
+    "tool-server",
+    "asset-registry",
+    "gamedev",
+    "threejs"
+  ],
+  "author": "Voidrane Splicer",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
