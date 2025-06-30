@@ -1,6 +1,7 @@
 // index.js
 import express from 'express'
 import cors from 'cors'
+import fs from 'fs'
 
 import assetRegistry from './tools/assetRegistry.js'
 import saveStateDB from './tools/saveStateDB.js'
