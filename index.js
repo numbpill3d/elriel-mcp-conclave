@@ -13,6 +13,7 @@ import convertModel from './tools/convertModel.js'
 import textureForge from './tools/textureForge.js'
 import skyboxGen from './tools/skyboxGen.js'
 import worldSim from './tools/worldSim.js'
+import loreTools from './tools/loreTools.js'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -30,7 +31,8 @@ const tools = {
   ...convertModel,
   ...textureForge,
   ...skyboxGen,
-  ...worldSim
+  ...worldSim,
+  ...loreTools
 }
 
 // Tool Usage Logger
