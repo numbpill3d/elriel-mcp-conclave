@@ -1,0 +1,24 @@
+{
+  "visual_theme": {
+    "influences": ["Morrowind", "Shivering Isles", "Ashlands", "Telvanni"],
+    "biomes": ["desolate fungus forests", "cities in the clouds", "glowing chitin towers", "medieval fantasy castles", "fogged insectoid ruins"],
+    "architectures": ["bone temples", "obsidian antenna spires", "organic lattice structures"],
+    "textures": ["dusty, matte", "mossy luminescence", "carapace-like gloss"]
+  },
+  "atmosphere": {
+    "palette": ["smoky orange", "soft green glows", "purple-blue haze", "dreary grey purple",  "mossy black"],
+    "weather": ["ashfall", "etherstorm", "vivid radiance", "foglight drift"],
+    "lighting": ["volumetric godrays", "backlit silhouettes", "aura-fog combo"]
+  },
+  "characters": {
+    "body": ["elongated", "hunched insectoid", "lumbering", "humanoid", "nonhuman anthropomorphic", "mildly rotting or fractal"],
+    "materials": ["resin", "chitin", "chains", "shell", "leather-bandage tech", "crystal tech"]
+  },
+  "rendering": {
+    "resolution": "pixelated",
+    "style": "PS1/PS2 post-processing",
+    "post_fx": ["dithered outlines", "shader grain", "ghost trails"],
+    "low_poly": true
+  },
+  "mood": "alien melancholy meets vivid surrealism — haunting but glowing, vivid, lively"
+}
