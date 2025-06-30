@@ -1,8 +1,14 @@
+// index.js
 import express from 'express'
 import cors from 'cors'
 
 import assetRegistry from './tools/assetRegistry.js'
 import saveStateDB from './tools/saveStateDB.js'
+import inspectGLTF from './tools/inspectGLTF.js'
+import renderSceneHTML from './tools/renderSceneHTML.js'
+import npcBrain from './tools/npcBrain.js'
+import shaderCheck from './tools/shaderCheck.js'
+import convertModel from './tools/convertModel.js'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -12,7 +18,12 @@ app.use(express.json())
 
 const tools = {
   ...assetRegistry,
-  ...saveStateDB
+  ...saveStateDB,
+  ...inspectGLTF,
+  ...renderSceneHTML,
+  ...npcBrain,
+  ...shaderCheck,
+  ...convertModel
 }
 
 app.get('/tools', (req, res) => {
