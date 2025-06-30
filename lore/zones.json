@@ -1,0 +1,17 @@
+{
+  "Desolace": {
+    "weather": "dust storms",
+    "hazards": ["time collapse", "fractal decay"],
+    "inhabitants": ["glass crows", "templebound NPCs"]
+  },
+  "Gogmire": {
+    "weather": "constant fog",
+    "hazards": ["swamp rot", "echo anomalies"],
+    "inhabitants": ["mud fiends", "hollow emissaries"]
+  },
+  "Skarthim'lel": {
+    "weather": "crystalline drift",
+    "hazards": ["resonance poisoning"],
+    "inhabitants": ["laceblood architects"]
+  }
+}
