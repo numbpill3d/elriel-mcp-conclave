@@ -1,0 +1,15 @@
+{
+  "renderSceneHTML": {
+    "input": { "models": ["citadel.glb"], "background": "#000000" },
+    "output": { "html": "<!DOCTYPE html>..." }
+  },
+  "inspectGLTF": {
+    "input": { "filename": "citadel.glb" },
+    "output": {
+      "meshes": [{ "name": "Main", "primitives": 1 }],
+      "nodes": [{ "name": "Root" }],
+      "accessors": 3,
+      "totalScenes": 1
+    }
+  }
+}
