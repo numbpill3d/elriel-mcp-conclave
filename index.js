@@ -18,6 +18,7 @@ import styleGuide from './tools/styleGuide.js'
 import sceneTemplate from './tools/sceneTemplate.js'
 import uiPanel from './tools/uiPanel.js'
 import shaderSnippet from './tools/shaderSnippet.js'
+import resourceCatalog from './tools/resourceCatalog.js'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -40,6 +41,7 @@ const tools = {
   ...styleGuide,
   ...sceneTemplate,
   ...uiPanel,
+  ...resourceCatalog,
   ...shaderSnippet
 }
 
