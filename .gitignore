@@ -2,3 +2,4 @@ node_modules/
 .env
 .DS_Store
 tool_usage.log
+version_log.json
