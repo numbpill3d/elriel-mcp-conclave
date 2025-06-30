@@ -30,7 +30,9 @@ All JavaScript modules inside the `tools/` directory are automatically loaded an
 
 List tools:
 
+```
 GET /tools
+```
 
 
 Run a tool by POSTing JSON with an `input` object:

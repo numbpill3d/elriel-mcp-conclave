@@ -5,9 +5,11 @@
     "version": "1.0.0",
     "description": "Server providing game development tools for Claude MCP."
   },
-  "servers": [
-    { "url": "http://localhost:3000" }
-  ],
+"servers": [
+  { "url": "/" },
+  { "url": "http://localhost:3000" }
+],
+
   "paths": {
     "/tools/{tool}": {
       "post": {
