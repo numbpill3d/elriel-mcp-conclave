@@ -2,11 +2,11 @@
   "name": "claude-mcp-server",
   "version": "1.0.0",
   "description": "Claude MCP tool server for asset management, save state, and build control.",
-  "main": "index.js",
+  "main": "index.mjs",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node index.mjs",
+    "dev": "nodemon index.mjs",
     "test": "node -e \"console.log('tests passed')\""
   },
   "keywords": [
@@ -33,7 +33,14 @@
     "express": "^4.18.2",
     "three": "^0.177.0",
     "@loaders.gl/core": "^3.4.2",
-    "@loaders.gl/gltf": "^3.4.2"
+    "@loaders.gl/gltf": "^3.4.2",
+    "express-session": "^1.17.3",
+    "passport": "^0.6.0",
+    "passport-oauth2": "^1.6.1",
+    "jsonwebtoken": "^9.0.0",
+    "helmet": "^7.0.0",
+    "dotenv": "^16.3.1",
+    "cookie-parser": "^1.4.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

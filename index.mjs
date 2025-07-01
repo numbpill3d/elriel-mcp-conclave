@@ -1,13 +1,31 @@
 import express from 'express'
 import cors from 'cors'
 import fs from 'fs'
+import helmet from 'helmet'
+import session from 'express-session'
+import passport from 'passport'
+import { config } from 'dotenv'
+import authRoutes from './routes/auth.mjs'
+
+config()
 
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(cors())
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000'
+app.use(cors({ origin: corsOrigin, credentials: true }))
+app.use(helmet())
 app.use(express.json())
-app.use(express.static('public'))
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'change_this_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production' }
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(express.static('public', { dotfiles: 'allow' }))
+app.use(authRoutes)
 
 const tools = {}
 const toolFiles = fs.readdirSync('./tools').filter(f => f.endsWith('.js'))
@@ -22,7 +40,11 @@ app.use((req, res, next) => {
     const toolName = req.url.split('/')[2]
     const timestamp = new Date().toISOString()
     const log = `[${timestamp}] Tool used: ${toolName}\n`
-    fs.appendFileSync('tool_usage.log', log)
+    try {
+      fs.appendFileSync('tool_usage.log', log)
+    } catch (err) {
+      console.error('Failed to write usage log', err)
+    }
   }
   next()
 })
@@ -34,7 +56,11 @@ if (!fs.existsSync(versionLog)) fs.writeFileSync(versionLog, JSON.stringify([]))
 function logVersionChange(tool, input) {
   const history = JSON.parse(fs.readFileSync(versionLog, 'utf-8'))
   history.push({ time: new Date().toISOString(), tool, input })
-  fs.writeFileSync(versionLog, JSON.stringify(history, null, 2))
+  try {
+    fs.writeFileSync(versionLog, JSON.stringify(history, null, 2))
+  } catch (err) {
+    console.error('Failed to update version log', err)
+  }
 }
 
 app.post('/tools/:tool', async (req, res) => {
@@ -49,7 +75,8 @@ app.post('/tools/:tool', async (req, res) => {
     }
     res.json({ output: result })
   } catch (e) {
-    res.status(500).json({ error: e.toString() })
+    console.error(e)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
@@ -59,8 +86,27 @@ app.get('/tools', (req, res) => {
   })
 })
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
+
+app.get('/.well-known/mcp/metadata', (req, res) => {
+  res.json({
+    tools: Object.keys(tools).map(key => ({ name: key, description: tools[key].description }))
+  })
+})
+
 app.get('/', (req, res) => {
   res.send('Claude MCP Tool Server is running.')
+})
+
+app.use((err, req, res, next) => {
+  console.error(err)
+  res.status(500).json({ error: 'Internal server error' })
+})
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' })
 })
 
 app.listen(port, () => {
