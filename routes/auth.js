@@ -30,11 +30,14 @@ passport.serializeUser((user, cb) => cb(null, user))
 passport.deserializeUser((obj, cb) => cb(null, obj))
 
 // Registration endpoint (simple placeholder)
+import bcrypt from 'bcrypt'
+
 const users = {}
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { username, password } = req.body
   if (!username || !password) return res.status(400).json({ error: 'Missing fields' })
-  users[username] = { password }
+  const hashedPassword = await bcrypt.hash(password, 10)
+  users[username] = { password: hashedPassword }
   res.status(201).json({ ok: true })
 })
 
