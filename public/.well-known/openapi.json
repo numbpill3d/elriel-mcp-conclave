@@ -77,24 +77,25 @@
         }
       }
     },
-    "/register": {
-      "post": {
-        "summary": "Register a new user",
-        "responses": { "201": { "description": "Created" } }
-      }
-    },
-    "/login": {
-      "get": {
-        "summary": "Begin OAuth2 login",
-        "responses": { "302": { "description": "Redirect" } }
-      }
-    },
-    "/oauth/callback": {
-      "get": {
-        "summary": "OAuth2 callback",
-        "responses": { "302": { "description": "Redirect" } }
-      }
-    },
+"/register": {
+  "post": {
+    "summary": "Register a new user",
+    "responses": { "201": { "description": "Created" } }
+  }
+},
+"/login": {
+  "get": {
+    "summary": "Begin OAuth2 login",
+    "responses": { "302": { "description": "Redirect" } }
+  }
+},
+"/oauth/callback": {
+  "get": {
+    "summary": "OAuth2 callback",
+    "responses": { "302": { "description": "Redirect" } }
+  }
+},
+
     "/check_auth": {
       "get": {
         "summary": "Check authentication status",
