@@ -46,7 +46,11 @@ router.get('/login', passport.authenticate('oauth2'))
 router.get('/oauth/callback', passport.authenticate('oauth2', { failureRedirect: '/' }), (req, res) => {
   const token = jwt.sign({ access: req.user.accessToken }, JWT_SECRET, { expiresIn: '1h' })
   res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' })
-  res.redirect('/')
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is required')
+  }
+
+  router.get('/check_auth', (req, res) => {
 })
 
 router.get('/check_auth', (req, res) => {
