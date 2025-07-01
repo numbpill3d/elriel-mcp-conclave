@@ -5,11 +5,10 @@
     "version": "1.0.0",
     "description": "Server providing game development tools for Claude MCP."
   },
-"servers": [
-  { "url": "/" },
-  { "url": "http://localhost:3000" }
-],
-
+  "servers": [
+    { "url": "https://example.com" },
+    { "url": "http://localhost:3000" }
+  ],
   "paths": {
     "/tools/{tool}": {
       "post": {
@@ -28,9 +27,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "input": { "type": "object" }
-                },
+                "properties": { "input": { "type": "object" } },
                 "required": ["input"]
               }
             }
@@ -43,8 +40,82 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "properties": { "output": {} }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools": {
+      "get": {
+        "summary": "List available tools",
+        "responses": {
+          "200": {
+            "description": "List of tools",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
                   "properties": {
-                    "output": {}
+                    "tools": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": { "type": "string" },
+                          "description": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/check_auth": {
+      "get": {
+        "summary": "Check authentication status",
+        "responses": {
+          "200": {
+            "description": "Auth state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "ok": { "type": "boolean" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/.well-known/mcp/metadata": {
+      "get": {
+        "summary": "MCP metadata discovery",
+        "responses": {
+          "200": {
+            "description": "Tool metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tools": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
                   }
                 }
               }

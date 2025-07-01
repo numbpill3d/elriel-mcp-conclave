@@ -5,13 +5,14 @@
   "description_for_human": "Provides game development tools like asset management and world simulation.",
   "description_for_model": "HTTP server exposing POST /tools/{tool} for running various game development utilities. Include an 'input' object in the JSON body.",
   "auth": {
-    "type": "none"
+    "type": "service_http",
+    "authorization_type": "bearer"
   },
   "api": {
     "type": "openapi",
-    "url": "http://localhost:3000/.well-known/openapi.json"
+    "url": "https://example.com/.well-known/openapi.json"
   },
   "logo_url": "/assets/icon.png",
-  "contact_email": "contact@example.com",
-  "legal_info_url": "https://voidrane.nekoweb.org"
+  "contact_email": "admin@example.com",
+  "legal_info_url": "https://example.com/legal"
 }
