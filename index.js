@@ -16,8 +16,12 @@ const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000'
 app.use(cors({ origin: corsOrigin, credentials: true }))
 app.use(helmet())
 app.use(express.json())
+if (!process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET environment variable is required')
+}
+
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'change_this_secret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production' }
