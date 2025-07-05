@@ -45,6 +45,16 @@ Static assets live under `public/assets/`. Additional folders such as `scenes/`,
 
 See `public/.well-known/openapi.json` for the minimal API specification.
 
+## Authentication
+
+Authentication routes require the environment variables described in `.env` to be configured. Set your session secrets and OAuth provider details before using them.
+
+- `POST /register` – register a new username and password.
+- `GET /login` – start the OAuth2 flow and redirect to the provider.
+- `GET /oauth/callback` – handle the provider's response and set a `token` cookie.
+- `GET /check_auth` – verify the current login state, returns `{ ok: true }` when authenticated.
+- **Log out** – clear the `token` cookie in your browser to remove the session.
+
 ## License
 
 Released under the MIT License. See [LICENSE](LICENSE).
