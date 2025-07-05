@@ -1,13 +1,11 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import fs from 'fs'
 import helmet from 'helmet'
 import session from 'express-session'
 import passport from 'passport'
-import { config } from 'dotenv'
 import authRoutes from './routes/auth.js'
-
-config()
 
 const app = express()
 const port = process.env.PORT || 3000
