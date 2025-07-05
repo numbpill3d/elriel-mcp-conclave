@@ -75,7 +75,6 @@ router.post('/logout', (req, res, next) => {
     res.json({ ok: true });
   });
 })
-})
 
 // Auth status check
 
