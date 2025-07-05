@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://example.com"
+      "url": "http://localhost:3000"
     },
     {
       "url": "http://localhost:3000"
