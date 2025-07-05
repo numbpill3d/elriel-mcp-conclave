@@ -6,8 +6,12 @@
     "description": "Server providing game development tools for Claude MCP."
   },
   "servers": [
-    { "url": "https://example.com" },
-    { "url": "http://localhost:3000" }
+    {
+      "url": "https://example.com"
+    },
+    {
+      "url": "http://localhost:3000"
+    }
   ],
   "paths": {
     "/tools/{tool}": {
@@ -18,7 +22,9 @@
             "name": "tool",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -27,8 +33,14 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": { "input": { "type": "object" } },
-                "required": ["input"]
+                "properties": {
+                  "input": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "input"
+                ]
               }
             }
           }
@@ -40,7 +52,9 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "output": {} }
+                  "properties": {
+                    "output": {}
+                  }
                 }
               }
             }
@@ -64,8 +78,12 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "name": { "type": "string" },
-                          "description": { "type": "string" }
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
@@ -77,25 +95,36 @@
         }
       }
     },
-"/register": {
-  "post": {
-    "summary": "Register a new user",
-    "responses": { "201": { "description": "Created" } }
-  }
-},
-"/login": {
-  "get": {
-    "summary": "Begin OAuth2 login",
-    "responses": { "302": { "description": "Redirect" } }
-  }
-},
-"/oauth/callback": {
-  "get": {
-    "summary": "OAuth2 callback",
-    "responses": { "302": { "description": "Redirect" } }
-  }
-},
-
+    "/register": {
+      "post": {
+        "summary": "Register a new user",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "summary": "Begin OAuth2 login",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/oauth/callback": {
+      "get": {
+        "summary": "OAuth2 callback",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
     "/check_auth": {
       "get": {
         "summary": "Check authentication status",
@@ -106,7 +135,11 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "ok": { "type": "boolean" } }
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  }
                 }
               }
             }
@@ -117,7 +150,11 @@
     "/health": {
       "get": {
         "summary": "Health check",
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/.well-known/mcp/metadata": {
@@ -133,12 +170,24 @@
                   "properties": {
                     "tools": {
                       "type": "array",
-                      "items": { "type": "object" }
+                      "items": {
+                        "type": "object"
+                      }
                     }
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "summary": "Log out and clear auth token",
+        "responses": {
+          "200": {
+            "description": "Logged out"
           }
         }
       }

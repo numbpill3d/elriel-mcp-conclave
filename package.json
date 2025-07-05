@@ -34,6 +34,7 @@
     "three": "^0.177.0",
     "@loaders.gl/core": "^3.4.2",
     "@loaders.gl/gltf": "^3.4.2",
+    "bcrypt": "^6.0.0",
     "express-session": "^1.17.3",
     "passport": "^0.6.0",
     "passport-oauth2": "^1.6.1",

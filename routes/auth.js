@@ -67,7 +67,14 @@ router.get('/oauth/callback', (req, res, next) => {
   })
 })
 
+// Log out by clearing the token cookie
+router.post('/logout', (req, res) => {
+  res.clearCookie('token')
+  req.logout?.(() => {})
+  res.json({ ok: true })
 })
+
+// Auth status check
 
 router.get('/check_auth', (req, res) => {
   const token = req.cookies?.token || req.headers.authorization?.split(' ')[1]
