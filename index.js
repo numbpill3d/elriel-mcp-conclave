@@ -5,6 +5,8 @@ import fs from 'fs'
 import helmet from 'helmet'
 import session from 'express-session'
 import passport from 'passport'
+import jwt from 'jsonwebtoken'
+import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.js'
 
 const app = express()
@@ -14,6 +16,7 @@ const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000'
 app.use(cors({ origin: corsOrigin, credentials: true }))
 app.use(helmet())
 app.use(express.json())
+app.use(cookieParser())
 if (!process.env.SESSION_SECRET) {
   throw new Error('SESSION_SECRET environment variable is required')
 }
@@ -29,6 +32,24 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static('public', { dotfiles: 'allow' }))
 app.use(authRoutes)
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required')
+}
+
+function requireAuth(req, res, next) {
+  const header = req.headers.authorization || ''
+  const token = req.cookies?.token || (header.startsWith('Bearer ') ? header.split(' ')[1] : null)
+  if (!token) return res.status(401).json({ error: 'Unauthorized' })
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET)
+    next()
+  } catch {
+    res.status(401).json({ error: 'Unauthorized' })
+  }
+}
+
+app.use('/tools', requireAuth)
 
 const tools = {}
 const toolFiles = fs.readdirSync('./tools').filter(f => f.endsWith('.js'))
