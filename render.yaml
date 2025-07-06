@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: elriel-mcp-conclave
+    env: node
+    nodeVersion: 18
+    buildCommand: npm install
+    startCommand: npm start
