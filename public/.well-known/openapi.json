@@ -115,9 +115,69 @@
         }
       }
     },
+    "/login/github": {
+      "get": {
+        "summary": "Begin GitHub OAuth2 login",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/login/google": {
+      "get": {
+        "summary": "Begin Google OAuth2 login",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/login/discord": {
+      "get": {
+        "summary": "Begin Discord OAuth2 login",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
     "/oauth/callback": {
       "get": {
         "summary": "OAuth2 callback",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/oauth/github/callback": {
+      "get": {
+        "summary": "GitHub OAuth2 callback",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/oauth/google/callback": {
+      "get": {
+        "summary": "Google OAuth2 callback",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/oauth/discord/callback": {
+      "get": {
+        "summary": "Discord OAuth2 callback",
         "responses": {
           "302": {
             "description": "Redirect"

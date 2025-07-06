@@ -38,6 +38,13 @@ cp .env.example .env
 # OAUTH_CALLBACK_URL=http://localhost:3000/oauth/callback
 ```
 
+Example values for deployment on Render:
+
+```bash
+CORS_ORIGIN=https://elriel-mcp-conclave.onrender.com
+OAUTH_CALLBACK_URL=https://elriel-mcp-conclave.onrender.com/oauth/callback
+```
+
 ## Usage
 
 All JavaScript modules inside the `tools/` directory are automatically loaded and exposed via HTTP.
@@ -64,8 +71,14 @@ See `public/.well-known/openapi.json` for the minimal API specification.
 Authentication routes require the environment variables described in `.env` to be configured. Set your session secrets and OAuth provider details before using them.
 
 - `POST /register` – register a new username and password.
-- `GET /login` – start the OAuth2 flow and redirect to the provider.
+- `GET /login` – start the default OAuth2 flow.
 - `GET /oauth/callback` – handle the provider's response and set a `token` cookie.
+- `GET /login/github` – begin GitHub login flow.
+- `GET /oauth/github/callback` – GitHub callback path.
+- `GET /login/google` – begin Google login flow.
+- `GET /oauth/google/callback` – Google callback path.
+- `GET /login/discord` – begin Discord login flow.
+- `GET /oauth/discord/callback` – Discord callback path.
 - `GET /check_auth` – verify the current login state, returns `{ ok: true }` when authenticated.
 - **Log out** – clear the `token` cookie in your browser to remove the session.
 
