@@ -48,6 +48,13 @@ cp .env.example .env
 # GOOGLE_CALLBACK_URL=https://elriel-mcp-conclave.onrender.com/oauth/google/callback
 ```
 
+Example values for deployment on Render:
+
+```bash
+CORS_ORIGIN=https://elriel-mcp-conclave.onrender.com
+OAUTH_CALLBACK_URL=https://elriel-mcp-conclave.onrender.com/oauth/callback
+```
+
 ## Usage
 
 All JavaScript modules inside the `tools/` directory are automatically loaded and exposed via HTTP.
@@ -74,12 +81,24 @@ See `public/.well-known/openapi.json` for the minimal API specification.
 Authentication routes require the environment variables described in `.env` to be configured. Set your session secrets and OAuth provider details before using them.
 
 - `POST /register` – register a new username and password.
-- `GET /login` – start the generic OAuth2 flow when `OAUTH_*` variables are configured.
-- `GET /login/github` – begin the GitHub OAuth process when GitHub variables are present.
-- `GET /login/google` – begin the Google OAuth process when Google variables are present.
-- `GET /oauth/callback` – handle the generic provider response.
-- `GET /oauth/github/callback` – GitHub OAuth callback.
-- `GET /oauth/google/callback` – Google OAuth callback.
+### OAuth2 Endpoints
+
+#### Generic OAuth2 (when `OAUTH_*` variables are configured)
+- `GET /login` – Start the generic OAuth2 login flow.
+- `GET /oauth/callback` – Handle the generic provider's response and set a `token` cookie.
+
+#### GitHub OAuth
+- `GET /login/github` – Begin the GitHub OAuth login flow.
+- `GET /oauth/github/callback` – Handle the GitHub OAuth callback.
+
+#### Google OAuth
+- `GET /login/google` – Begin the Google OAuth login flow.
+- `GET /oauth/google/callback` – Handle the Google OAuth callback.
+
+#### Discord OAuth
+- `GET /login/discord` – Begin the Discord OAuth login flow.
+- `GET /oauth/discord/callback` – Handle the Discord OAuth callback.
+
 - `GET /check_auth` – verify the current login state, returns `{ ok: true }` when authenticated.
 - **Log out** – clear the `token` cookie in your browser to remove the session.
 
