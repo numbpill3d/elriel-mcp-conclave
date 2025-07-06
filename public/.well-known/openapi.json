@@ -125,6 +125,46 @@
         }
       }
     },
+    "/login/github": {
+      "get": {
+        "summary": "Begin GitHub OAuth2 login",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/oauth/github/callback": {
+      "get": {
+        "summary": "GitHub OAuth2 callback",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/login/google": {
+      "get": {
+        "summary": "Begin Google OAuth2 login",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
+    "/oauth/google/callback": {
+      "get": {
+        "summary": "Google OAuth2 callback",
+        "responses": {
+          "302": {
+            "description": "Redirect"
+          }
+        }
+      }
+    },
     "/check_auth": {
       "get": {
         "summary": "Check authentication status",

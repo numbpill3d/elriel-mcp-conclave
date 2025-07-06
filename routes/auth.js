@@ -13,24 +13,83 @@ const {
   OAUTH_AUTH_URL,
   OAUTH_TOKEN_URL,
   OAUTH_CALLBACK_URL,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  GITHUB_AUTH_URL,
+  GITHUB_TOKEN_URL,
+  GITHUB_CALLBACK_URL,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_AUTH_URL,
+  GOOGLE_TOKEN_URL,
+  GOOGLE_CALLBACK_URL,
   JWT_SECRET
 } = process.env
 
+function registerProvider(name, cfg) {
+  passport.use(name, new OAuth2Strategy({
+    authorizationURL: cfg.authURL,
+    tokenURL: cfg.tokenURL,
+    clientID: cfg.clientID,
+    clientSecret: cfg.clientSecret,
+    callbackURL: cfg.callbackURL
+  }, (accessToken, refreshToken, profile, cb) => cb(null, { accessToken })))
+
+  const loginPath = name === 'oauth2' ? '/login' : `/login/${name}`
+  const callbackPath = name === 'oauth2' ? '/oauth/callback' : `/oauth/${name}/callback`
+
+  router.get(loginPath, (req, res, next) => {
+    passport.authenticate(name)(req, res, next)
+  })
+
+  router.get(callbackPath, (req, res, next) => {
+    passport.authenticate(name, { failureRedirect: '/' })(req, res, () => {
+      if (!JWT_SECRET) {
+        throw new Error('JWT_SECRET environment variable is required')
+      }
+      const token = jwt.sign({ access: req.user.accessToken }, JWT_SECRET, { expiresIn: '1h' })
+      res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' })
+      res.redirect('/')
+    })
+  })
+}
+
 const oauthConfigured = OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET &&
   OAUTH_AUTH_URL && OAUTH_TOKEN_URL && OAUTH_CALLBACK_URL
-
 if (oauthConfigured) {
-  passport.use(new OAuth2Strategy({
-    authorizationURL: OAUTH_AUTH_URL,
+  registerProvider('oauth2', {
+    authURL: OAUTH_AUTH_URL,
     tokenURL: OAUTH_TOKEN_URL,
     clientID: OAUTH_CLIENT_ID,
     clientSecret: OAUTH_CLIENT_SECRET,
     callbackURL: OAUTH_CALLBACK_URL
-  }, (accessToken, refreshToken, profile, cb) => {
-    return cb(null, { accessToken })
-  }))
+  })
 } else {
-  console.warn('OAuth2 not configured; auth routes will be disabled')
+  console.warn('OAuth2 not configured; /login route disabled')
+}
+
+const githubConfigured = GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET &&
+  GITHUB_AUTH_URL && GITHUB_TOKEN_URL && GITHUB_CALLBACK_URL
+if (githubConfigured) {
+  registerProvider('github', {
+    authURL: GITHUB_AUTH_URL,
+    tokenURL: GITHUB_TOKEN_URL,
+    clientID: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+    callbackURL: GITHUB_CALLBACK_URL
+  })
+}
+
+const googleConfigured = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET &&
+  GOOGLE_AUTH_URL && GOOGLE_TOKEN_URL && GOOGLE_CALLBACK_URL
+if (googleConfigured) {
+  registerProvider('google', {
+    authURL: GOOGLE_AUTH_URL,
+    tokenURL: GOOGLE_TOKEN_URL,
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: GOOGLE_CALLBACK_URL
+  })
 }
 
 
@@ -50,22 +109,6 @@ router.post('/register', async (req, res) => {
   res.status(201).json({ ok: true })
 })
 
-router.get('/login', (req, res, next) => {
-  if (!oauthConfigured) return res.status(501).json({ error: 'OAuth not configured' })
-  passport.authenticate('oauth2')(req, res, next)
-})
-
-router.get('/oauth/callback', (req, res, next) => {
-  if (!oauthConfigured) return res.status(501).json({ error: 'OAuth not configured' })
-  passport.authenticate('oauth2', { failureRedirect: '/' })(req, res, () => {
-    if (!JWT_SECRET) {
-      throw new Error('JWT_SECRET environment variable is required')
-    }
-    const token = jwt.sign({ access: req.user.accessToken }, JWT_SECRET, { expiresIn: '1h' })
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' })
-    res.redirect('/')
-  })
-})
 
 // Log out by clearing the token cookie
 router.post('/logout', (req, res, next) => {
