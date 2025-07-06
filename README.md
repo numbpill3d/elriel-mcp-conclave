@@ -26,7 +26,7 @@ The server defaults to port `3000`. You may set the `PORT` environment variable 
 
 Before running the server, copy `.env.example` to `.env` and provide values for
 `SESSION_SECRET` and `JWT_SECRET`. If you plan to use OAuth2 login, also fill in
-the `OAUTH_*` variables with your provider details:
+the provider variables with your details:
 
 ```bash
 cp .env.example .env
@@ -36,6 +36,16 @@ cp .env.example .env
 # OAUTH_AUTH_URL=https://provider.com/oauth/authorize
 # OAUTH_TOKEN_URL=https://provider.com/oauth/token
 # OAUTH_CALLBACK_URL=http://localhost:3000/oauth/callback
+# GITHUB_CLIENT_ID=...
+# GITHUB_CLIENT_SECRET=...
+# GITHUB_AUTH_URL=...
+# GITHUB_TOKEN_URL=...
+# GITHUB_CALLBACK_URL=https://elriel-mcp-conclave.onrender.com/oauth/github/callback
+# GOOGLE_CLIENT_ID=...
+# GOOGLE_CLIENT_SECRET=...
+# GOOGLE_AUTH_URL=...
+# GOOGLE_TOKEN_URL=...
+# GOOGLE_CALLBACK_URL=https://elriel-mcp-conclave.onrender.com/oauth/google/callback
 ```
 
 Example values for deployment on Render:
@@ -71,14 +81,24 @@ See `public/.well-known/openapi.json` for the minimal API specification.
 Authentication routes require the environment variables described in `.env` to be configured. Set your session secrets and OAuth provider details before using them.
 
 - `POST /register` – register a new username and password.
-- `GET /login` – start the default OAuth2 flow.
-- `GET /oauth/callback` – handle the provider's response and set a `token` cookie.
-- `GET /login/github` – begin GitHub login flow.
-- `GET /oauth/github/callback` – GitHub callback path.
-- `GET /login/google` – begin Google login flow.
-- `GET /oauth/google/callback` – Google callback path.
-- `GET /login/discord` – begin Discord login flow.
-- `GET /oauth/discord/callback` – Discord callback path.
+### OAuth2 Endpoints
+
+#### Generic OAuth2 (when `OAUTH_*` variables are configured)
+- `GET /login` – Start the generic OAuth2 login flow.
+- `GET /oauth/callback` – Handle the generic provider's response and set a `token` cookie.
+
+#### GitHub OAuth
+- `GET /login/github` – Begin the GitHub OAuth login flow.
+- `GET /oauth/github/callback` – Handle the GitHub OAuth callback.
+
+#### Google OAuth
+- `GET /login/google` – Begin the Google OAuth login flow.
+- `GET /oauth/google/callback` – Handle the Google OAuth callback.
+
+#### Discord OAuth
+- `GET /login/discord` – Begin the Discord OAuth login flow.
+- `GET /oauth/discord/callback` – Handle the Discord OAuth callback.
+
 - `GET /check_auth` – verify the current login state, returns `{ ok: true }` when authenticated.
 - **Log out** – clear the `token` cookie in your browser to remove the session.
 

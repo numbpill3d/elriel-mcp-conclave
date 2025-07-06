@@ -1,89 +1,71 @@
-{
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Claude MCP Tool Server",
-    "version": "1.0.0",
-    "description": "Server providing game development tools for Claude MCP."
-  },
-  "servers": [
-    {
-      "url": "http://localhost:3000"
-    },
-    {
-      "url": "http://localhost:3000"
-    }
-  ],
-  "paths": {
-    "/tools/{tool}": {
-      "post": {
-        "summary": "Run a tool by name",
-        "parameters": [
-          {
-            "name": "tool",
-            "in": "path",
-            "required": true,
+"paths": {
+  "/tools/{tool}": {
+    "post": {
+      "summary": "Run a tool by name",
+      "parameters": [
+        {
+          "name": "tool",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "object"
+                }
+              },
+              "required": ["input"]
             }
           }
-        ],
-        "requestBody": {
-          "required": true,
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Tool output",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "input": {
-                    "type": "object"
-                  }
-                },
-                "required": [
-                  "input"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Tool output",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "output": {}
-                  }
+                  "output": {}
                 }
               }
             }
           }
         }
       }
-    },
-    "/tools": {
-      "get": {
-        "summary": "List available tools",
-        "responses": {
-          "200": {
-            "description": "List of tools",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "tools": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "description": {
-                            "type": "string"
-                          }
+    }
+  },
+  "/tools": {
+    "get": {
+      "summary": "List available tools",
+      "responses": {
+        "200": {
+          "description": "List of tools",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tools": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
                         }
                       }
                     }
@@ -94,110 +76,145 @@
           }
         }
       }
-    },
-    "/register": {
-      "post": {
-        "summary": "Register a new user",
-        "responses": {
-          "201": {
-            "description": "Created"
+    }
+  },
+  "/register": {
+    "post": {
+      "summary": "Register a new user",
+      "responses": {
+        "201": {
+          "description": "Created"
+        }
+      }
+    }
+  },
+  "/login": {
+    "get": {
+      "summary": "Begin OAuth2 login",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/login/github": {
+    "get": {
+      "summary": "Begin GitHub OAuth2 login",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/oauth/github/callback": {
+    "get": {
+      "summary": "GitHub OAuth2 callback",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/login/google": {
+    "get": {
+      "summary": "Begin Google OAuth2 login",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/oauth/google/callback": {
+    "get": {
+      "summary": "Google OAuth2 callback",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/login/discord": {
+    "get": {
+      "summary": "Begin Discord OAuth2 login",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/oauth/discord/callback": {
+    "get": {
+      "summary": "Discord OAuth2 callback",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/oauth/callback": {
+    "get": {
+      "summary": "OAuth2 callback",
+      "responses": {
+        "302": {
+          "description": "Redirect"
+        }
+      }
+    }
+  },
+  "/check_auth": {
+    "get": {
+      "summary": "Check authentication status",
+      "responses": {
+        "200": {
+          "description": "Auth state",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
           }
         }
       }
-    },
-    "/login": {
-      "get": {
-        "summary": "Begin OAuth2 login",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
+    }
+  },
+  "/health": {
+    "get": {
+      "summary": "Health check",
+      "responses": {
+        "200": {
+          "description": "OK"
         }
       }
-    },
-    "/login/github": {
-      "get": {
-        "summary": "Begin GitHub OAuth2 login",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        }
-      }
-    },
-    "/login/google": {
-      "get": {
-        "summary": "Begin Google OAuth2 login",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        }
-      }
-    },
-    "/login/discord": {
-      "get": {
-        "summary": "Begin Discord OAuth2 login",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        }
-      }
-    },
-    "/oauth/callback": {
-      "get": {
-        "summary": "OAuth2 callback",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        }
-      }
-    },
-    "/oauth/github/callback": {
-      "get": {
-        "summary": "GitHub OAuth2 callback",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        }
-      }
-    },
-    "/oauth/google/callback": {
-      "get": {
-        "summary": "Google OAuth2 callback",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        }
-      }
-    },
-    "/oauth/discord/callback": {
-      "get": {
-        "summary": "Discord OAuth2 callback",
-        "responses": {
-          "302": {
-            "description": "Redirect"
-          }
-        }
-      }
-    },
-    "/check_auth": {
-      "get": {
-        "summary": "Check authentication status",
-        "responses": {
-          "200": {
-            "description": "Auth state",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "ok": {
-                      "type": "boolean"
+    }
+  },
+  "/.well-known/mcp/metadata": {
+    "get": {
+      "summary": "MCP metadata discovery",
+      "responses": {
+        "200": {
+          "description": "Tool metadata",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tools": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
                     }
                   }
                 }
@@ -206,49 +223,20 @@
           }
         }
       }
-    },
-    "/health": {
-      "get": {
-        "summary": "Health check",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
+    }
+  },
+  "/logout": {
+    "post": {
+      "summary": "Log out and clear auth token",
+      "responses": {
+        "200": {
+          "description": "Logged out"
         }
       }
-    },
-    "/.well-known/mcp/metadata": {
-      "get": {
-        "summary": "MCP metadata discovery",
-        "responses": {
-          "200": {
-            "description": "Tool metadata",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "tools": {
-                      "type": "array",
-                      "items": {
-                        "type": "object"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/logout": {
-      "post": {
-        "summary": "Log out and clear auth token",
-        "responses": {
-          "200": {
-            "description": "Logged out"
-          }
+    }
+  }
+}
+
         }
       }
     }
