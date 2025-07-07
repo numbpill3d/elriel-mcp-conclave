@@ -25,17 +25,22 @@ npm start
 The server defaults to port `3000`. You may set the `PORT` environment variable to override the port.
 
 Before running the server, copy `.env.example` to `.env` and provide values for
-`SESSION_SECRET` and `JWT_SECRET`. If you plan to use OAuth2 login, also fill in
-the provider variables with your details:
+`JWT_SECRET` and **optionally** `SESSION_SECRET`. If `SESSION_SECRET` is not set
+a development default will be used with a warning. To enable persistent session
+storage for production, set either `REDIS_URL` or `MONGO_URI`. If you plan to
+use OAuth2 login, also fill in the provider variables with your details:
 
 ```bash
 cp .env.example .env
 # edit .env with your secret values
+# SESSION_SECRET=replace_me
 # OAUTH_CLIENT_ID=...
 # OAUTH_CLIENT_SECRET=...
 # OAUTH_AUTH_URL=https://provider.com/oauth/authorize
 # OAUTH_TOKEN_URL=https://provider.com/oauth/token
 # OAUTH_CALLBACK_URL=http://localhost:3000/oauth/callback
+# MONGO_URI=mongodb://user:pass@host/db
+# REDIS_URL=redis://localhost:6379
 # GITHUB_CLIENT_ID=...
 # GITHUB_CLIENT_SECRET=...
 # GITHUB_AUTH_URL=...
@@ -53,6 +58,8 @@ Example values for deployment on Render:
 ```bash
 CORS_ORIGIN=https://elriel-mcp-conclave.onrender.com
 OAUTH_CALLBACK_URL=https://elriel-mcp-conclave.onrender.com/oauth/callback
+# MONGO_URI=your-production-mongo-uri
+# REDIS_URL=your-production-redis-url
 ```
 
 ## Usage

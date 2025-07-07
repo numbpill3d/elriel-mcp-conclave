@@ -56,6 +56,7 @@ function registerProvider(name, cfg) {
 
 const oauthConfigured = OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET &&
   OAUTH_AUTH_URL && OAUTH_TOKEN_URL && OAUTH_CALLBACK_URL
+let defaultProvider = null
 if (oauthConfigured) {
   registerProvider('oauth2', {
     authURL: OAUTH_AUTH_URL,
@@ -64,8 +65,7 @@ if (oauthConfigured) {
     clientSecret: OAUTH_CLIENT_SECRET,
     callbackURL: OAUTH_CALLBACK_URL
   })
-} else {
-  console.warn('OAuth2 not configured; /login route disabled')
+  defaultProvider = 'oauth2'
 }
 
 const githubConfigured = GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET &&
@@ -78,6 +78,7 @@ if (githubConfigured) {
     clientSecret: GITHUB_CLIENT_SECRET,
     callbackURL: GITHUB_CALLBACK_URL
   })
+  if (!defaultProvider) defaultProvider = 'github'
 }
 
 const googleConfigured = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET &&
@@ -90,6 +91,17 @@ if (googleConfigured) {
     clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: GOOGLE_CALLBACK_URL
   })
+  if (!defaultProvider) defaultProvider = 'google'
+}
+
+if (defaultProvider) {
+  if (!oauthConfigured) {
+    router.get('/login', (req, res) => res.redirect(`/login/${defaultProvider}`))
+    router.get('/oauth/callback', (req, res) => res.redirect(`/oauth/${defaultProvider}/callback`))
+  }
+  console.log(`/login route enabled using ${defaultProvider} OAuth2 provider`)
+} else {
+  console.warn('OAuth2 not configured; /login route disabled')
 }
 
 

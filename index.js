@@ -6,6 +6,9 @@ import helmet from 'helmet'
 import session from 'express-session'
 import passport from 'passport'
 import authRoutes from './routes/auth.js'
+import MongoStore from 'connect-mongo'
+import { RedisStore } from 'connect-redis'
+import { createClient as createRedisClient } from 'redis'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -14,13 +17,33 @@ const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000'
 app.use(cors({ origin: corsOrigin, credentials: true }))
 app.use(helmet())
 app.use(express.json())
-if (!process.env.SESSION_SECRET) {
-  throw new Error('SESSION_SECRET environment variable is required')
+
+let sessionSecret = process.env.SESSION_SECRET
+if (!sessionSecret) {
+  sessionSecret = 'dev_session_secret'
+  console.warn('SESSION_SECRET not set; using insecure development secret')
+}
+
+let sessionStore
+if (process.env.REDIS_URL) {
+  const redisClient = createRedisClient({ url: process.env.REDIS_URL })
+  await redisClient.connect()
+  sessionStore = new RedisStore({ client: redisClient })
+  console.log('Using Redis session store')
+} else if (process.env.MONGO_URI) {
+  sessionStore = MongoStore.create({ mongoUrl: process.env.MONGO_URI })
+  console.log('Using MongoDB session store')
+} else {
+  sessionStore = new session.MemoryStore()
+  console.warn('No REDIS_URL or MONGO_URI provided; using MemoryStore')
+  if (process.env.NODE_ENV === 'production') {
+    console.warn('MemoryStore is not recommended for production')
+  }
 }
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-
+  secret: sessionSecret,
+  store: sessionStore,
   resave: false,
   saveUninitialized: false,
   cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production' }
