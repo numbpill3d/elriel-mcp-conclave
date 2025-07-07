@@ -8,6 +8,8 @@ import MongoStore from 'connect-mongo'
 import { RedisStore } from 'connect-redis'
 import { createClient as createRedisClient } from 'redis'
 import passport from 'passport'
+import jwt from 'jsonwebtoken'
+import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.js'
 
 const app = express()
@@ -17,13 +19,22 @@ const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000'
 app.use(cors({ origin: corsOrigin, credentials: true }))
 app.use(helmet())
 app.use(express.json())
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
 
 let sessionSecret = process.env.SESSION_SECRET
+
 if (!sessionSecret) {
-  sessionSecret = 'dev_session_secret'
-  console.warn('SESSION_SECRET not set, using insecure development secret')
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('SESSION_SECRET environment variable is required in production')
+  } else {
+    sessionSecret = 'dev_session_secret'
+    console.warn('SESSION_SECRET not set, using insecure development secret')
+  }
 } else {
   console.log('Using SESSION_SECRET from environment')
+}
+
 }
 
 let sessionStore
@@ -51,6 +62,24 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static('public', { dotfiles: 'allow' }))
 app.use(authRoutes)
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required')
+}
+
+function requireAuth(req, res, next) {
+  const header = req.headers.authorization || ''
+  const token = req.cookies?.token || (header.startsWith('Bearer ') ? header.split(' ')[1] : null)
+  if (!token) return res.status(401).json({ error: 'Unauthorized' })
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET)
+    next()
+  } catch {
+    res.status(401).json({ error: 'Unauthorized' })
+  }
+}
+
+app.use('/tools', requireAuth)
 
 const tools = {}
 const toolFiles = fs.readdirSync('./tools').filter(f => f.endsWith('.js'))
