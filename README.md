@@ -25,7 +25,9 @@ npm start
 The server defaults to port `3000`. You may set the `PORT` environment variable to override the port.
 
 Before running the server, copy `.env.example` to `.env` and provide values for
-`SESSION_SECRET` and `JWT_SECRET`. If you plan to use OAuth2 login, also fill in
+`JWT_SECRET`. Setting `SESSION_SECRET` is recommended for production but will
+fall back to a weak development value if omitted. Configure a session store with
+`MONGO_URI` or `REDIS_URL` when deploying. If you plan to use OAuth2 login, also fill in
 the provider variables with your details:
 
 ```bash
@@ -53,6 +55,8 @@ Example values for deployment on Render:
 ```bash
 CORS_ORIGIN=https://elriel-mcp-conclave.onrender.com
 OAUTH_CALLBACK_URL=https://elriel-mcp-conclave.onrender.com/oauth/callback
+MONGO_URI="mongodb+srv://user:pass@cluster.mongodb.net/dbname"
+REDIS_URL="redis://default:pass@redis:6379"
 ```
 
 ## Usage

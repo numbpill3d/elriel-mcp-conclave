@@ -26,7 +26,9 @@ const {
   JWT_SECRET
 } = process.env
 
-function registerProvider(name, cfg) {
+let defaultRegistered = false
+
+function registerProvider(name, cfg, makeDefault = false) {
   passport.use(name, new OAuth2Strategy({
     authorizationURL: cfg.authURL,
     tokenURL: cfg.tokenURL,
@@ -34,16 +36,15 @@ function registerProvider(name, cfg) {
     clientSecret: cfg.clientSecret,
     callbackURL: cfg.callbackURL
   }, (accessToken, refreshToken, profile, cb) => cb(null, { accessToken })))
+  const loginPath = `/login/${name}`
+  const callbackPath = `/oauth/${name}/callback`
 
-  const loginPath = name === 'oauth2' ? '/login' : `/login/${name}`
-  const callbackPath = name === 'oauth2' ? '/oauth/callback' : `/oauth/${name}/callback`
+  const doAuth = passport.authenticate(name)
+  const doCallback = passport.authenticate(name, { failureRedirect: '/' })
 
-  router.get(loginPath, (req, res, next) => {
-    passport.authenticate(name)(req, res, next)
-  })
-
+  router.get(loginPath, doAuth)
   router.get(callbackPath, (req, res, next) => {
-    passport.authenticate(name, { failureRedirect: '/' })(req, res, () => {
+    doCallback(req, res, () => {
       if (!JWT_SECRET) {
         throw new Error('JWT_SECRET environment variable is required')
       }
@@ -52,6 +53,23 @@ function registerProvider(name, cfg) {
       res.redirect('/')
     })
   })
+
+  console.log(`OAuth provider '${name}' configured${makeDefault ? ' (default)' : ''}`)
+
+  if (makeDefault && !defaultRegistered) {
+    defaultRegistered = true
+    router.get('/login', doAuth)
+    router.get('/oauth/callback', (req, res, next) => {
+      doCallback(req, res, () => {
+        if (!JWT_SECRET) {
+          throw new Error('JWT_SECRET environment variable is required')
+        }
+        const token = jwt.sign({ access: req.user.accessToken }, JWT_SECRET, { expiresIn: '1h' })
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' })
+        res.redirect('/')
+      })
+    })
+  }
 }
 
 const oauthConfigured = OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET &&
@@ -63,21 +81,7 @@ if (oauthConfigured) {
     clientID: OAUTH_CLIENT_ID,
     clientSecret: OAUTH_CLIENT_SECRET,
     callbackURL: OAUTH_CALLBACK_URL
-  })
-} else {
-  console.warn('OAuth2 not configured; /login route disabled')
-}
-
-const githubConfigured = GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET &&
-  GITHUB_AUTH_URL && GITHUB_TOKEN_URL && GITHUB_CALLBACK_URL
-if (githubConfigured) {
-  registerProvider('github', {
-    authURL: GITHUB_AUTH_URL,
-    tokenURL: GITHUB_TOKEN_URL,
-    clientID: GITHUB_CLIENT_ID,
-    clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: GITHUB_CALLBACK_URL
-  })
+  }, true)
 }
 
 const googleConfigured = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET &&
@@ -89,7 +93,23 @@ if (googleConfigured) {
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: GOOGLE_CALLBACK_URL
-  })
+  }, !oauthConfigured)
+}
+
+const githubConfigured = GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET &&
+  GITHUB_AUTH_URL && GITHUB_TOKEN_URL && GITHUB_CALLBACK_URL
+if (githubConfigured) {
+  registerProvider('github', {
+    authURL: GITHUB_AUTH_URL,
+    tokenURL: GITHUB_TOKEN_URL,
+    clientID: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+    callbackURL: GITHUB_CALLBACK_URL
+  }, !oauthConfigured && !googleConfigured)
+}
+
+if (!oauthConfigured && !googleConfigured && !githubConfigured) {
+  console.warn('OAuth2 not configured; /login route disabled')
 }
 
 
