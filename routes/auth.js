@@ -56,18 +56,20 @@ function registerProvider(name, cfg, makeDefault = false) {
 
   console.log(`OAuth provider '${name}' configured${makeDefault ? ' (default)' : ''}`)
 
+  const handleAuthSuccess = (req, res) => {
+    if (!JWT_SECRET) {
+      throw new Error('JWT_SECRET environment variable is required')
+    }
+    const token = jwt.sign({ access: req.user.accessToken }, JWT_SECRET, { expiresIn: '1h' })
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' })
+    res.redirect('/')
+  }
+
   if (makeDefault && !defaultRegistered) {
     defaultRegistered = true
     router.get('/login', doAuth)
     router.get('/oauth/callback', (req, res, next) => {
-      doCallback(req, res, () => {
-        if (!JWT_SECRET) {
-          throw new Error('JWT_SECRET environment variable is required')
-        }
-        const token = jwt.sign({ access: req.user.accessToken }, JWT_SECRET, { expiresIn: '1h' })
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' })
-        res.redirect('/')
-      })
+      doCallback(req, res, () => handleAuthSuccess(req, res))
     })
   }
 }
